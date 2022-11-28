@@ -1,6 +1,6 @@
 package sisc;
 
-import static sisc.Instructions.*;
+import static sisc.instructions.Instructions.*;
 
 public class InstructionParser {	
 	public static void execute(short s) {

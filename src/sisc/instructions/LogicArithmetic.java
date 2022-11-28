@@ -1,7 +1,7 @@
-package sisc;
+package sisc.instructions;
 
 import static sisc.RegFile.*;
-import static sisc.Instructions.*;
+import static sisc.instructions.Instructions.*;
 
 public class LogicArithmetic {
 	private static final int REG_MASK = 0b111;
@@ -55,11 +55,11 @@ public class LogicArithmetic {
 		}
 	}
 
-	static void eval(int regA, int regB, int dest, BiShort2ShortFunction fn) {
+	private static void eval(int regA, int regB, int dest, BiShort2ShortFunction fn) {
 		setReg(dest, (short)fn.eval(getReg(regA), getReg(regB)));
 	}
 
-	interface BiShort2ShortFunction {
+	private interface BiShort2ShortFunction {
 		int eval(short a, short b);
 	}
 }

@@ -1,4 +1,4 @@
-package sisc;
+package sisc.instructions;
 
 // from SISAj
 // TODO these could be enums
