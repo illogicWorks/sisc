@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class FileReader{
 	
-	public static short[] LoadImage(String path) {
+	public static short[] loadImage(String path) {
 		Path pth = Path.of(path);
 		short[] instructions;
 		try {
@@ -16,14 +16,15 @@ public class FileReader{
 			throw new RuntimeException(e1);
 		}
 		
+		
 		System.out.println("Reading from " + pth.toAbsolutePath());
 	
 		try (InputStream is = Files.newInputStream(pth)){
 			// Read two bytes because instructions are 16-bit wide
 			byte[] data;
 			for(int i = 0; (data = is.readNBytes(2)).length != 0; i++) {
-				instructions[i] = (short) Byte.toUnsignedInt(data[1]);
-				instructions[i] |= data[0] << 8;
+				instructions[i] = (short) Byte.toUnsignedInt(data[0]);
+				instructions[i] |= data[1] << 8;
 			}
 		} catch (IOException e) {
 			//TODO Implement error handling

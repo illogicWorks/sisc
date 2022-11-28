@@ -2,11 +2,7 @@ package sisc;
 
 import static sisc.Instructions.*;
 
-public class InstructionParser {
-	public static void main(String[] args) {
-		execute((short)(0b0110 << 12));
-	}
-	
+public class InstructionParser {	
 	public static void execute(short s) {
 		byte instr = (byte)(s >> 12 << 4);
 		System.out.println(switch (instr) {
@@ -20,7 +16,7 @@ public class InstructionParser {
 			case JALR -> "JALR";
 			case MOVE -> "MOVE";
 			case IO   -> "IO";
-			default -> null;
+			default -> Integer.toHexString(Byte.toUnsignedInt(instr));
 		});
 	}
 }

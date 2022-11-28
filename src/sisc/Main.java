@@ -1,11 +1,11 @@
 package sisc;
 
-import java.util.BitSet;
-
 public class Main {
 
 	FileReader fileReader;
 	IMEM imem;
+	
+	private final short PC = 0;
 	
 	public static void main(String[] args) {
 		System.out.println("Hello World!");
@@ -13,8 +13,10 @@ public class Main {
 	}
 	
 	public void run() {
-		imem = new IMEM(FileReader.LoadImage("samples/test.siso"));
-		System.out.println(imem);
+		imem = new IMEM(FileReader.loadImage("samples/test.siso"));
+		System.out.println("IMEM contents: " + imem);
+		
+		InstructionParser.execute(imem.getInstructionAt(PC));
 	}
 
 }
