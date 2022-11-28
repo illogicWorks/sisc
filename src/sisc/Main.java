@@ -11,7 +11,7 @@ public class Main {
 	
 	public void run() {
 		fileReader = new FileReader();
-		fileReader.LoadImage("test.siso");
+		fileReader.LoadImage("samples/test.siso");
 	}
 
 }
