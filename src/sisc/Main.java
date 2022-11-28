@@ -1,7 +1,5 @@
 package sisc;
 
-import java.util.BitSet;
-
 public class Main {
 
 	FileReader fileReader;
@@ -13,8 +11,11 @@ public class Main {
 	}
 	
 	public void run() {
-		imem = new IMEM(FileReader.LoadImage("samples/test.siso"));
-		System.out.println(imem);
+		imem = new IMEM(FileReader.loadImage("samples/test.siso"));
+		System.out.println("IMEM contents: " + imem);
+		
+		// RIght now we are executing the first instruction pointed by PC
+		InstructionParser.execute(imem.getInstructionAt(PC.next()));
 	}
 
 }
