@@ -24,34 +24,22 @@ public class LogicArithmetic {
 		});
 	}
 
-	private static final int SHIFT_MASK = 0b11111;
-	private static final int SHIFT_SIGN = 0b10000;
+	private static final int SHIFT_SIGN   = 0b10000;
 	private static final int SHIFT_AMOUNT = 0b01111;
 
-	static int shl(short a, short b) {
-		byte maskedB = (byte)(b & SHIFT_MASK);
-		if ((maskedB & SHIFT_SIGN) == 0) { // > 0
+	private static int shl(short a, short b) {
+		if ((b & SHIFT_SIGN) == 0) { // > 0
 			return a << (b & SHIFT_AMOUNT);
 		} else {
-			return a >> (b & SHIFT_AMOUNT);
+			return a >>> (b & SHIFT_AMOUNT);
 		}
 	}
 
-	static int sha(short a, short b) {
-		byte maskedB = (byte)(b & SHIFT_MASK);
-		if ((maskedB & SHIFT_SIGN) == 0) { // > 0
+	private static int sha(short a, short b) {
+		if ((b & SHIFT_SIGN) == 0) { // > 0
 			return a << b;
 		} else {
-			if ((a & 0b10000000000000000) == 0) {
-				return a >> (b & SHIFT_AMOUNT);
-			} else {
-				short c = (short)0b10000000000000000;
-				int shiftAmount = (b & SHIFT_AMOUNT);
-				for (byte i = 0; i < shiftAmount; i++) {
-					c |= c >> 1;
-				}
-				return (a >> shiftAmount) | c;
-			}
+			return a >> (b & SHIFT_AMOUNT);
 		}
 	}
 
