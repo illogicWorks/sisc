@@ -12,4 +12,8 @@ public class PC {
 	public static void jump(byte amount) {
 		PC += amount;
 	}
+	
+	public static String peek() {
+		return Integer.toHexString(Short.toUnsignedInt(PC));
+	}
 }
