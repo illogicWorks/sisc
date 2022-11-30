@@ -14,8 +14,9 @@ public class Main {
 		imem = new IMEM(FileReader.loadImage("samples/test.siso"));
 		System.out.println("IMEM contents: " + imem);
 		
-		// RIght now we are executing the first instruction pointed by PC
-		InstructionParser.execute(imem.getInstructionAt(PC.next()));
+		while (true) {
+			InstructionParser.execute(imem.getInstructionAt(PC.next()));
+		}
 	}
 
 }
