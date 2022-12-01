@@ -13,9 +13,11 @@ public class Main {
 	public void run() {
 		imem = new IMEM(FileReader.loadImage("samples/test.siso"));
 		System.out.println("IMEM contents: " + imem);
-		System.out.println("PC addr: " + PC.peek());
-		// RIght now we are executing the first instruction pointed by PC
-		InstructionParser.execute(imem.getInstructionAt(PC.next()));		
+		
+		while (true) {
+            System.out.println("PC addr: " + PC.peek());
+			InstructionParser.execute(imem.getInstructionAt(PC.next()));
+		}
 	}
 
 }
