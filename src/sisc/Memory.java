@@ -1,27 +1,12 @@
 package sisc;
 
-import sun.misc.Unsafe;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.nio.ByteOrder;
 
-/**
- * A very safe implementation of the computer's memory module
- * @author altrisi
- */
 public record Memory(byte[] s) implements InstructionStorage {
+	private static final VarHandle SHORT_AT = MethodHandles.byteArrayViewVarHandle(short[].class, ByteOrder.LITTLE_ENDIAN);
 	private static final Memory INSTANCE = new Memory(new byte[Short.MAX_VALUE * 2]);
-	private static final long BYTE_ARRAY_BASE = Unsafe.ARRAY_BYTE_BASE_OFFSET;
-	private static final long BYTE_ARRAY_SCALE = Unsafe.ARRAY_BYTE_INDEX_SCALE;
-	private static final Unsafe UNSAFE;
-	static {
-		Unsafe u;
-		try {
-			var m = Unsafe.class.getDeclaredField("theUnsafe");
-			m.setAccessible(true);
-			u = (Unsafe)m.get(null);
-		} catch (ReflectiveOperationException e) {
-			throw new RuntimeException("This wasn't safe anyway!", e);
-		}
-		UNSAFE = u;
-	}
 
 	/**
 	 * Places all bytes in the passed array into this memory, placing them starting at {@code startPos} and going for
@@ -42,10 +27,7 @@ public record Memory(byte[] s) implements InstructionStorage {
 
 	public short load(short addr) {
 		int safeAddr = clean(addr);
-		/*short ret = 0;
-		ret |= Byte.toUnsignedInt(s[safeAddr]);
-		ret |= s[safeAddr + 1] << 8;*/
-		return UNSAFE.getShort(s, BYTE_ARRAY_BASE + safeAddr * BYTE_ARRAY_SCALE);
+		return (short)SHORT_AT.get(s, safeAddr);
 	}
 
 	public short loadByte(short addr) {
@@ -54,11 +36,7 @@ public record Memory(byte[] s) implements InstructionStorage {
 
 	public void store(short addr, short value) {
 		int safeAddr = clean(addr);
-		/*byte lower  = (byte)value;
-		byte higher = (byte)(value >> 8);
-		s[safeAddr] = lower;
-		s[safeAddr+1] = higher;*/
-		UNSAFE.putShort(s, BYTE_ARRAY_BASE + safeAddr * BYTE_ARRAY_SCALE, value);
+		SHORT_AT.set(s, safeAddr, value);
 	}
 
 	public void storeByte(short addr, byte val) {
