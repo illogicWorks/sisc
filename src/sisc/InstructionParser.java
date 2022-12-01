@@ -5,17 +5,17 @@ import sisc.instructions.*;
 import static sisc.instructions.Instructions.*;
 
 public class InstructionParser {	
-	public static void execute(short s) {
-		byte instr = (byte)(s >> 12 << 4);
-		switch (instr) {
-			case OPS  -> LogicArithmetic.handle(s);
-			case CMP  -> Compare.handle(s);
-			case ADDI -> throw todo(instr);
-			case LD, ST, LDB, STB -> MemoryInstr.handle(s);
-			case JALR -> throw todo(instr);
-			case MOVE -> Moving.handle(s);
-			case IO   -> throw todo(instr);
-			default   -> unknown(instr);
+	public static void execute(short instr) {
+		byte instrType = (byte)(instr >> 12 << 4);
+		switch (instrType) {
+			case OPS  -> LogicArithmetic.handle(instr);
+			case CMP  -> Compare.handle(instr);
+			case ADDI -> Immediate.handle(instr);
+			case LD, ST, LDB, STB -> MemoryInstr.handle(instr);
+			case JALR -> throw todo(instrType);
+			case MOVE -> Moving.handle(instr);
+			case IO   -> throw todo(instrType);
+			default   -> unknown(instrType);
 		};
 	}
 
