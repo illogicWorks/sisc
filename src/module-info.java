@@ -4,5 +4,5 @@
  *
  */
 module sisc {
-	
+	exports sisc.api.io;
 }
