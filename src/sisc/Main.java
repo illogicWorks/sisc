@@ -15,6 +15,7 @@ public class Main {
 		System.out.println("IMEM contents: " + imem);
 		
 		while (true) {
+            System.out.println("PC addr: " + PC.peek());
 			InstructionParser.execute(imem.getInstructionAt(PC.next()));
 		}
 	}
