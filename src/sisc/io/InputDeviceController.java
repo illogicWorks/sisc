@@ -55,11 +55,13 @@ public final class InputDeviceController implements InputPair, PortReadListener 
 			throw new IllegalStateException("Device is not connected!");
 	}
 
-	// called after our data port is read. We implicitly flip acknowledge low
+	// called after our data port is read. We implicitly flip acknowledge low and unblock the
+	// thread that called into us
 	@Override
 	public void onPortRead() {
 		system.setIn(acknowledgePort, false);
 		LockSupport.unpark(lockedThread);
+		lockedThread = null;
 	}
 	
 	@Override

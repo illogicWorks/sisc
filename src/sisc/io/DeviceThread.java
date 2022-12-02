@@ -1,8 +1,8 @@
 package sisc.io;
 
+// marker class to distinguish threads
 public final class DeviceThread extends Thread {
-	public DeviceThread(String name, Runnable task) {
+	public DeviceThread(Runnable task) {
 		super(task);
-		setName(name);
 	}
 }
