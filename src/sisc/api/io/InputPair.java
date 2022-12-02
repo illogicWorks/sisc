@@ -17,9 +17,9 @@ public sealed interface InputPair permits InputDeviceController {
 	 * 
 	 * You can disconnect by calling {@link #disconnect()}.
 	 * 
-	 * @param request     The output port where the computer will flip its request bit. See {@link InputDevice#onReqUp()} and {@link #reqStatus()}
-	 * @param acknowledge The input port where acknowledge will be signaled. See {@link #acknowledge(short)}
-	 * @param data        The input port where the computer will read data from. See {@link #acknowledge(short)}
+	 * @param request     The input port the device will flip when offering data. See {@link #offer(short)}
+	 * @param acknowledge The output port where acknowledge will be signaled. It is useless
+	 * @param data        The input port where the computer will read data from. See {@link #offer(short)}
 	 * 
 	 * @throws PortInUseException If some of the requested ports are already in use
 	 * @throws IllegalStateException If already connected
@@ -27,17 +27,11 @@ public sealed interface InputPair permits InputDeviceController {
 	void connectTo(int request, int acknowledge, int data) throws PortInUseException;
 
 	/**
-	 * Flips the acknowledge bus to one and the data bus to the given data.<p>
-	 * Setting it back to low is already handled implicitly.
-	 * @param The data to put in the data port
+	 * Sets the data bus to the given data and the request bus to one.<p>
+	 * The calling thread will be locked until the computer reads the data.
+	 * @param data The data to put in the data port
 	 */
-	void acknowledge(short data);
-
-	/**
-	 * @return The current status of the request port
-	 * @see InputDevice#onReqUp()
-	 */
-	boolean reqStatus();
+	void offer(short data);
 	
 	/**
 	 * Disconnects the device from the computer.<p>

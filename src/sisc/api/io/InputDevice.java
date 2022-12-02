@@ -3,13 +3,6 @@ package sisc.api.io;
 // todo class docs
 public interface InputDevice {
 	/**
-	 * Gets notified when the request port goes up. Note that it this method is called in the
-	 * computer's thread. From now, the {@link InputDevice} can send an acknowledge with data
-	 * using {@link InputPair#acknowledge(short)}.
-	 */
-	void onReqUp();
-
-	/**
 	 * Gets called when SISC is starting up and should start and connect the device.
 	 * If this {@link InputDevice} was declared statically (and therefore via ServiceLoader or
 	 * the module system), this method will be called in a just started thread.<p>
