@@ -14,7 +14,10 @@ public class DeviceDiscoverer {
 		for (var candidate : ServiceLoader.load(InputDevice.class)) {
 			InputDeviceController controller = new InputDeviceController(io, candidate);
 			devices.add(controller);
-			threadsToStart.add(new DeviceThread("InputDeviceThread[" + candidate.name() + "]", () -> candidate.start(controller)));
+			DeviceThread thread = new DeviceThread(() -> candidate.start(controller));
+			threadsToStart.add(thread);
+			candidate.configure(thread);
+			thread.setName("InputDeviceThread[" + candidate.name() + "]");
 		}
 		Collections.shuffle(threadsToStart);
 		threadsToStart.forEach(Thread::start);
