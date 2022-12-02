@@ -1,13 +1,15 @@
 package sisc.io;
 
 import java.lang.invoke.VarHandle;
+import java.util.concurrent.locks.LockSupport;
 
 import sisc.api.io.*;
 
-public final class InputDeviceController implements InputPair, PortChangeListener, PortReadListener {
+public final class InputDeviceController implements InputPair, PortReadListener {
 	private final InputDevice device;
 	private final IOSystem system;
 	private boolean connected;
+	private volatile Thread lockedThread;
 	/* package */ int requestPort;
 	              int acknowledgePort;
 	              int dataPort;
@@ -30,16 +32,14 @@ public final class InputDeviceController implements InputPair, PortChangeListene
 	}
 
 	@Override
-	public void acknowledge(short data) {
+	public void offer(short data) {
 		assertConnected();
-		system.setIn(acknowledgePort, true);
+		if (system.getIn(acknowledgePort) != 0)
+			throw new IllegalStateException("Already offering data");
+		system.setIn(requestPort, true);
 		system.setIn(dataPort, data);
-	}
-
-	@Override
-	public boolean reqStatus() {
-		assertConnected();
-		return system.getOut(requestPort) == 1;
+		lockedThread = Thread.currentThread();
+		LockSupport.park(this);
 	}
 
 	@Override
@@ -59,13 +59,7 @@ public final class InputDeviceController implements InputPair, PortChangeListene
 	@Override
 	public void onPortRead() {
 		system.setIn(acknowledgePort, false);
-	}
-
-	// called when the request port is changed
-	@Override
-	public void onPortChanged(short value) {
-		if (value == 1)
-			device.onReqUp();
+		LockSupport.unpark(lockedThread);
 	}
 	
 	@Override

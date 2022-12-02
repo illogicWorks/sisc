@@ -32,26 +32,24 @@ public final class IOSystem {
 	// methods only devices can touch
 	synchronized void registerInput(InputDeviceController device) throws PortInUseException {
 		// Separate to not occupy some ports if a later one fails
-		if (usedOut.containsKey(device.requestPort))
+		if (usedIn.containsKey(device.requestPort))
 			throw new PortInUseException(device.requestPort);
-		if (usedIn.containsKey(device.acknowledgePort))
+		if (usedOut.containsKey(device.acknowledgePort))
 			throw new PortInUseException(device.acknowledgePort);
 		if (usedOut.containsKey(device.dataPort))
 			throw new PortInUseException(device.dataPort);
 
-		usedOut.put(device.requestPort, device);
-		usedIn.put(device.acknowledgePort, device);
+		usedIn.put(device.requestPort, device);
+		usedOut.put(device.acknowledgePort, device);
 		usedIn.put(device.dataPort, device);
-		outChangeListeners[device.requestPort] = device;
 		inReadListeners[device.dataPort] = device;
 		VarHandle.fullFence();
 	}
 
 	synchronized void unregisterInput(InputDeviceController device) {
-		usedOut.remove(device.requestPort);
-		usedIn.remove(device.acknowledgePort);
+		usedIn.remove(device.requestPort);
+		usedOut.remove(device.acknowledgePort);
 		usedIn.remove(device.dataPort);
-		outChangeListeners[device.requestPort] = null;
 		inReadListeners[device.dataPort] = null;
 		VarHandle.fullFence();
 	}
