@@ -6,7 +6,7 @@ import static sisc.instructions.Instructions.*;
 
 public class InstructionParser {	
 	public static void execute(short instr) {
-		byte instrType = (byte)(instr >> 12 << 4);
+		byte instrType = (byte)(instr >>> 12 << 4);
 		switch (instrType) {
 			case OPS  -> LogicArithmetic.handle(instr);
 			case CMP  -> Compare.handle(instr);
@@ -14,7 +14,7 @@ public class InstructionParser {
 			case LD, ST, LDB, STB -> MemoryInstr.handle(instr);
 			case JALR -> throw todo(instrType);
 			case MOVE -> Moving.handle(instr);
-			case IO   -> throw todo(instrType);
+			case IO   -> InputOutput.handle(instr, null); //TODO hook IOSystem
 			default   -> unknown(instrType);
 		};
 	}
