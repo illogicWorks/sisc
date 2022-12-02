@@ -18,14 +18,16 @@ public final class IOSystem {
 
 	public void setOut(int port, short value) {
 		HANDLE.setVolatile(output, port, value);
-		if (outChangeListeners[port] != null)
-			outChangeListeners[port].onPortChanged(value);
+		PortChangeListener listener = outChangeListeners[port];
+		if (listener != null)
+			listener.onPortChanged(value);
 	}
 	
 	public short getIn(int port) {
 		short ret = (short)HANDLE.getVolatile(input, port);
-		if (inReadListeners[port] != null)
-			inReadListeners[port].onPortRead();
+		PortReadListener listener = inReadListeners[port];
+		if (listener != null)
+			listener.onPortRead();
 		return ret;
 	}
 
