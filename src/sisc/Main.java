@@ -13,11 +13,13 @@ public class Main {
 	public void run() {
 		imem = new IMEM(FileReader.loadImage("samples/test.siso"));
 		System.out.println("IMEM contents: " + imem);
+		Debugger.PrintRegisters();
 		
-		while (true) {
+		
+		/*while (true) {
             System.out.println("PC addr: " + PC.peek());
 			InstructionParser.execute(imem.getInstructionAt(PC.next()));
-		}
+		}*/
 	}
 
 }

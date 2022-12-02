@@ -14,6 +14,7 @@ public class PC {
 	}
 	
 	public static String peek() {
+		//TODO: When PC is negative here means PC has overflown, warn the user via debugger
 		return Integer.toHexString(Short.toUnsignedInt(PC));
 	}
 }
