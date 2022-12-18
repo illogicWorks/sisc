@@ -5,7 +5,6 @@ import static sisc.RegFile.setReg;
 import static sisc.instructions.Instructions.*;
 
 public class Compare {
-	private static final int REG_MASK = 0b111;
 
 	public static void handle(short s) {
 		byte instr = (byte)(s & 0b111);

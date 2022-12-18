@@ -1,6 +1,6 @@
 package sisc.instructions;
 
-// from SISAj
+// from SISAj, added reg and e masks
 // TODO these could be enums
 public interface Instructions {
 	// CCCC field in the MSB
@@ -36,4 +36,8 @@ public interface Instructions {
 	byte CMPEQ  = 3;
 	byte CMPLTU = 4;
 	byte CMPLEU = 5;
+	
+	// from sisc: masks
+	int REG_MASK = 0b111;
+	int E_MASK = 0b100000000;
 }

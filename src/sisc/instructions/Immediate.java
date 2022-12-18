@@ -4,7 +4,6 @@ import static sisc.RegFile.*;
 import static sisc.instructions.Instructions.*;
 
 public class Immediate {
-	private static final int REG_MASK = 0b111;
 	private static final int IMMEDIATE_MASK = 0b111111;
 	public static void handle(short s) {
 		byte instr = (byte)(s >> 12 << 4);

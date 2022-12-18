@@ -7,7 +7,6 @@ import static sisc.instructions.Instructions.*;
 
 public class MemoryInstr {
 	private static final Memory MEM = Memory.flash(new byte[0], 0);
-	private static final int REG_MASK = 0b111;
 
 	public static void handle(short s) {
 		int regAddress = (s >> 9) & REG_MASK;
