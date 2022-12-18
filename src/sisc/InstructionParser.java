@@ -15,13 +15,9 @@ public class InstructionParser {
 			case JUMP -> Branching.branch(instr);
 			case JALR -> Branching.jalr(instr);
 			case MOVE -> Moving.handle(instr);
-			case IO   -> throw todo(instrType);
+			case IO   -> new UnsupportedOperationException("TODO: " + Integer.toHexString(Byte.toUnsignedInt(instrType)));
 			default   -> unknown(instrType);
 		};
-	}
-
-	private static UnsupportedOperationException todo(byte instr) {
-		return new UnsupportedOperationException("TODO: " + Integer.toHexString(Byte.toUnsignedInt(instr)));
 	}
 
 	private static void unknown(byte instr) {
