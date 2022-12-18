@@ -12,7 +12,8 @@ public class InstructionParser {
 			case CMP  -> Compare.handle(instr);
 			case ADDI -> Immediate.handle(instr);
 			case LD, ST, LDB, STB -> MemoryInstr.handle(instr);
-			case JALR -> throw todo(instrType);
+			case JUMP -> Branching.branch(instr);
+			case JALR -> Branching.jalr(instr);
 			case MOVE -> Moving.handle(instr);
 			case IO   -> throw todo(instrType);
 			default   -> unknown(instrType);
