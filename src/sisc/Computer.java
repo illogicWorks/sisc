@@ -1,14 +1,19 @@
 package sisc;
 
 import sisc.instructions.*;
+import sisc.io.DeviceDiscoverer;
+import sisc.io.IOSystem;
 
 import static sisc.instructions.Instructions.*;
 
 public class Computer {
 	private final InstructionStorage instructions;
+	private final IOSystem ioSystem;
 	
 	public Computer() {
-		this.instructions = new IMEM(FileReader.loadImage("samples/test.siso"));
+		instructions = new IMEM(FileReader.loadImage("samples/test.siso"));
+		ioSystem = new IOSystem();
+		DeviceDiscoverer.discoverDevices(ioSystem);
 	}
 	
 	public void run() {
@@ -21,8 +26,7 @@ public class Computer {
 		}
 	}
 
-	// TODO make non-static and use stuff from the Computer instance once it's not so static
-	public static void execute(short instr) {
+	public void execute(short instr) {
 		byte instrType = (byte)(instr >> 12 << 4);
 		switch (instrType) {
 			case OPS  -> LogicArithmetic.handle(instr);
@@ -32,7 +36,7 @@ public class Computer {
 			case JUMP -> Branching.branch(instr);
 			case JALR -> Branching.jalr(instr);
 			case MOVE -> Moving.handle(instr);
-			case IO   -> throw new UnsupportedOperationException("TODO: I/O");
+			case IO   -> InputOutput.handle(instr, ioSystem);
 			default   -> unknown(instrType);
 		};
 	}
