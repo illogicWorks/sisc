@@ -11,16 +11,16 @@ public final class IOSystem {
 	private static final VarHandle HANDLE = MethodHandles.arrayElementVarHandle(short[].class);
 	private final short[] input = new short[256];
 	private final short[] output = new short[256];
-	private final PortChangeListener[] outChangeListeners = new PortChangeListener[256];
+	private final PortWriteListener[] outChangeListeners = new PortWriteListener[256];
 	private final PortReadListener[] inReadListeners = new PortReadListener[256];
-	private final Map<Integer, InputDeviceController> usedIn = new HashMap<>();
-	private final Map<Integer, InputDeviceController> usedOut = new HashMap<>();
+	private final Map<Integer, Object> usedIn = new HashMap<>();
+	private final Map<Integer, Object> usedOut = new HashMap<>();
 
 	public void setOut(int port, short value) {
 		HANDLE.setVolatile(output, port, value);
-		PortChangeListener listener = outChangeListeners[port];
+		PortWriteListener listener = outChangeListeners[port];
 		if (listener != null)
-			listener.onPortChanged(value);
+			listener.onPortWrite(value);
 	}
 	
 	public short getIn(int port) {
@@ -38,7 +38,7 @@ public final class IOSystem {
 			throw new PortInUseException(device.requestPort);
 		if (usedOut.containsKey(device.acknowledgePort))
 			throw new PortInUseException(device.acknowledgePort);
-		if (usedOut.containsKey(device.dataPort))
+		if (usedIn.containsKey(device.dataPort))
 			throw new PortInUseException(device.dataPort);
 
 		usedIn.put(device.requestPort, device);
@@ -47,12 +47,31 @@ public final class IOSystem {
 		inReadListeners[device.dataPort] = device;
 		VarHandle.fullFence();
 	}
+	
+	synchronized void registerOutput(OutputDeviceController device) throws PortInUseException {
+		if (usedIn.containsKey(device.requestPort))
+			throw new PortInUseException(device.requestPort);
+		if (usedOut.containsKey(device.dataPort))
+			throw new PortInUseException(device.dataPort);
+		
+		usedIn.put(device.requestPort, device);
+		usedOut.put(device.dataPort, device);
+		outChangeListeners[device.dataPort] = device;
+		VarHandle.fullFence();
+	}
 
 	synchronized void unregisterInput(InputDeviceController device) {
 		usedIn.remove(device.requestPort);
 		usedOut.remove(device.acknowledgePort);
 		usedIn.remove(device.dataPort);
 		inReadListeners[device.dataPort] = null;
+		VarHandle.fullFence();
+	}
+	
+	synchronized void unregisterOutput(OutputDeviceController device) {
+		usedIn.remove(device.requestPort);
+		usedOut.remove(device.dataPort);
+		outChangeListeners[device.dataPort] = null;
 		VarHandle.fullFence();
 	}
 

@@ -7,14 +7,13 @@ import sisc.api.io.OutputDevice;
 import sisc.api.io.OutputPair;
 import sisc.api.io.PortInUseException;
 
-public final class OutputDeviceController implements OutputPair, PortChangeListener {
+public final class OutputDeviceController implements OutputPair, PortWriteListener {
 	private final OutputDevice device;
 	private final IOSystem system;
 	private boolean connected;
 	private volatile Thread lockedThread;
 	
 	int requestPort;
-	int acknowledgePort;
 	int dataPort;
 	
 	public OutputDeviceController(IOSystem system, OutputDevice device) {
@@ -23,30 +22,30 @@ public final class OutputDeviceController implements OutputPair, PortChangeListe
 	}
 	
 	@Override
-	public void onPortChanged(short value) {
-		//TODO: implement 
-		
+	public void onPortWrite(short value) {
+		system.setIn(dataPort, false);
+		LockSupport.unpark(lockedThread);
 	}
 
 	@Override
 	public void connectTo(int request, int acknowledge, int data) throws PortInUseException {
 		if (connected)
 			throw new IllegalStateException("Device already connected!");
-		this.requestPort = request;
-		this.acknowledgePort = acknowledge;
-		this.dataPort = data;
-		//TODO REGISTER OUTPUT 
-		this.connected = true;
+		requestPort = request;
+		dataPort = data;
+		system.registerOutput(this);
+		connected = true;
 		VarHandle.fullFence();
 	}
 
 	@Override
 	public short recieve() {
 		assertConnected();
-		//TODO: get the output
-		
+		system.setIn(dataPort, true);
 		lockedThread = Thread.currentThread();
+		
 		LockSupport.park(this);
+		return system.getOut(dataPort);
 	}
 	
 	private void assertConnected() {
@@ -57,9 +56,14 @@ public final class OutputDeviceController implements OutputPair, PortChangeListe
 	@Override
 	public void disconnect() {
 		assertConnected();
-		// TODO: Implement unregister output
-		this.connected = false;
+		system.unregisterOutput(this);
+		connected = false;
 		VarHandle.fullFence();
+	}
+	
+	@Override
+	public String toString() {
+		return "OutputController=" + device.name();
 	}
 
 }
