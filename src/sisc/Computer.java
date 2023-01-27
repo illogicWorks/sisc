@@ -6,6 +6,8 @@ import sisc.io.IOSystem;
 
 import static sisc.instructions.Instructions.*;
 
+import java.util.Arrays;
+
 public class Computer {
 	private final Memory memory = new Memory();
 	private final InstructionStorage instructions;
@@ -33,7 +35,8 @@ public class Computer {
 		System.out.println("Contents: " + instructions);
 		
 		while (true) {
-            System.out.println("PC addr: " + PC.peekStr());
+            //System.out.println("PC addr: " + PC.peekStr());
+			//System.out.println(Arrays.toString(RegFile.REGS));
 			runNext();
 		}
 	}
