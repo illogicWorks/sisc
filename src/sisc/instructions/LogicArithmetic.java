@@ -29,15 +29,15 @@ public class LogicArithmetic {
 		if ((b & SHIFT_SIGN) == 0) { // > 0
 			return a << (b & SHIFT_AMOUNT);
 		} else {
-			return a >>> (b & SHIFT_AMOUNT);
+			return a >>> Math.abs(b | ~SHIFT_AMOUNT);
 		}
 	}
 
 	private static int sha(short a, short b) {
 		if ((b & SHIFT_SIGN) == 0) { // > 0
-			return a << b;
+			return a << (b & SHIFT_AMOUNT);
 		} else {
-			return a >> (b & SHIFT_AMOUNT);
+			return a >> Math.abs(b | ~SHIFT_AMOUNT);
 		}
 	}
 
