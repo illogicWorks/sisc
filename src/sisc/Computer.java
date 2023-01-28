@@ -7,6 +7,7 @@ import sisc.io.IOSystem;
 import static sisc.instructions.Instructions.*;
 
 public class Computer {
+	private final Memory memory = new Memory();
 	private final InstructionStorage instructions;
 	private final PC PC = new PC();
 	private final IOSystem ioSystem;
@@ -33,7 +34,7 @@ public class Computer {
 			case OPS  -> LogicArithmetic.handle(instr);
 			case CMP  -> Compare.handle(instr);
 			case ADDI -> Immediate.handle(instr);
-			case LD, ST, LDB, STB -> MemoryInstr.handle(instr);
+			case LD, ST, LDB, STB -> MemoryInstr.handle(instr, memory);
 			case JUMP -> Branching.branch(instr, PC);
 			case JALR -> Branching.jalr(instr, PC);
 			case MOVE -> Moving.handle(instr);
