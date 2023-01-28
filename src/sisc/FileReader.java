@@ -27,9 +27,19 @@ public class FileReader{
 				instructions[i] |= data[1] << 8;
 			}
 		} catch (IOException e) {
-			//TODO Implement error handling
-			throw new RuntimeException(e);
+			throw new RuntimeException("Exception while loading image", e);
 		}
 		return instructions;
+	}
+
+	public static byte[] loadImageBytes(String path) {
+		Path pth = Path.of(path);
+		System.out.println("Reading from " + pth.toAbsolutePath());
+
+		try (InputStream is = Files.newInputStream(pth)) {
+			return is.readAllBytes();
+		} catch (IOException e) {
+			throw new RuntimeException("Exception while loading image", e);
+		}
 	}
 }
