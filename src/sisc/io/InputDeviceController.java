@@ -1,6 +1,5 @@
 package sisc.io;
 
-import java.lang.invoke.VarHandle;
 import java.util.concurrent.locks.LockSupport;
 
 import sisc.api.io.*;
@@ -28,7 +27,6 @@ public final class InputDeviceController implements InputPair, PortReadListener 
 		this.dataPort = data;
 		system.registerInput(this);
 		this.connected = true;
-		VarHandle.fullFence();
 	}
 
 	@Override
@@ -36,9 +34,9 @@ public final class InputDeviceController implements InputPair, PortReadListener 
 		assertConnected();
 		if (system.getIn(acknowledgePort) != 0)
 			throw new IllegalStateException("Already offering data");
-		system.setIn(requestPort, true);
-		system.setIn(dataPort, data);
 		lockedThread = Thread.currentThread();
+		system.setIn(dataPort, data);
+		system.setIn(requestPort, true);
 		LockSupport.park(this);
 	}
 
@@ -47,7 +45,6 @@ public final class InputDeviceController implements InputPair, PortReadListener 
 		assertConnected();
 		system.unregisterInput(this);
 		this.connected = false;
-		VarHandle.fullFence();
 	}
 
 	private void assertConnected() {
@@ -59,6 +56,7 @@ public final class InputDeviceController implements InputPair, PortReadListener 
 	// thread that called into us
 	@Override
 	public void onPortRead() {
+		system.setIn(requestPort, false);
 		system.setIn(acknowledgePort, false);
 		LockSupport.unpark(lockedThread);
 		lockedThread = null;

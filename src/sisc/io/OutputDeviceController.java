@@ -23,8 +23,9 @@ public final class OutputDeviceController implements OutputPair, PortWriteListen
 	
 	@Override
 	public void onPortWrite(short value) {
-		system.setIn(dataPort, false);
+		system.setIn(requestPort, false);
 		LockSupport.unpark(lockedThread);
+		lockedThread = null;
 	}
 
 	@Override
@@ -35,15 +36,13 @@ public final class OutputDeviceController implements OutputPair, PortWriteListen
 		dataPort = data;
 		system.registerOutput(this);
 		connected = true;
-		VarHandle.fullFence();
 	}
 
 	@Override
 	public short recieve() {
 		assertConnected();
-		system.setIn(dataPort, true);
 		lockedThread = Thread.currentThread();
-		
+		system.setIn(requestPort, true);
 		LockSupport.park(this);
 		return system.getOut(dataPort);
 	}
