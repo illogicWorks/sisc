@@ -18,7 +18,7 @@ public class LogicArithmetic {
 			case SUB -> (a, b) -> a - b;
 			case SHA -> LogicArithmetic::sha;
 			case SHL -> LogicArithmetic::shl;
-			default -> throw new UnsupportedOperationException();
+			default -> throw new IllegalArgumentException();
 		});
 	}
 
