@@ -8,6 +8,7 @@ import static sisc.instructions.Instructions.*;
 
 public class Computer {
 	private final InstructionStorage instructions;
+	private final PC PC = new PC();
 	private final IOSystem ioSystem;
 	
 	public Computer() {
@@ -33,8 +34,8 @@ public class Computer {
 			case CMP  -> Compare.handle(instr);
 			case ADDI -> Immediate.handle(instr);
 			case LD, ST, LDB, STB -> MemoryInstr.handle(instr);
-			case JUMP -> Branching.branch(instr);
-			case JALR -> Branching.jalr(instr);
+			case JUMP -> Branching.branch(instr, PC);
+			case JALR -> Branching.jalr(instr, PC);
 			case MOVE -> Moving.handle(instr);
 			case IO   -> InputOutput.handle(instr, ioSystem);
 			default   -> unknown(instrType);
