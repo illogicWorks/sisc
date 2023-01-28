@@ -5,7 +5,8 @@ public record IMEM(short[] data) implements InstructionStorage {
 	public String toString() {
 		String s = "";
 		for (short instr : data) {
-			s += Integer.toHexString(Short.toUnsignedInt(instr));
+			String str = Integer.toHexString(Short.toUnsignedInt(instr));
+			s += "0".repeat(4 - str.length()) + str;
 		}
 		return s;
 	}
