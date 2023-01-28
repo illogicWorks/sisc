@@ -33,7 +33,7 @@ public class Computer {
 		switch (instrType) {
 			case OPS  -> LogicArithmetic.handle(instr);
 			case CMP  -> Compare.handle(instr);
-			case ADDI -> Immediate.handle(instr);
+			case ADDI -> Immediate.addi(instr);
 			case LD, ST, LDB, STB -> MemoryInstr.handle(instr, memory);
 			case JUMP -> Branching.branch(instr, PC);
 			case JALR -> Branching.jalr(instr, PC);

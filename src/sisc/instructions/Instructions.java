@@ -40,4 +40,17 @@ public interface Instructions {
 	// from sisc: masks
 	int REG_MASK = 0b111;
 	int E_MASK = 0b100000000;
+	
+	// from sisc: 6 bit constants
+	static short extract6BitConstant(short s) {
+		// here so we don't expose them, they're still constants
+		final int MASK_6BIT_SIGN = 0b100000;
+		final int MASK_6BIT  = 0b111111;
+		byte b = (byte)s;
+		if ((b & MASK_6BIT_SIGN) == 0) { // > 0
+			return (short)(b & MASK_6BIT);
+		} else {
+			return (short)(b | ~MASK_6BIT);
+		}
+	}
 }
