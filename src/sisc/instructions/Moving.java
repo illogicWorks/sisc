@@ -5,7 +5,7 @@ import static sisc.instructions.Instructions.*;
 
 public class Moving {
 	public static void handle(short s) {
-		int address = (s >> 9) & 0b111;
+		int address = (s >> 9) & REG_MASK;
 		if ((s & E_MASK) == 0) { // e == 0
 			// MOVI
 			setReg(address, (byte)s);
