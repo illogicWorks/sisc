@@ -18,17 +18,26 @@ public class Computer {
 		DeviceDiscoverer.discoverDevices(ioSystem);
 	}
 	
+	/**
+	 * Runs all the code in the {@link InstructionStorage}. Infinite loop
+	 */
 	public void run() {
-		
 		System.out.println("IMEM contents: " + instructions);
 		
 		while (true) {
             System.out.println("PC addr: " + PC.peekStr());
-			execute(instructions.getInstructionAt(PC.next()));
+			runNext();
 		}
 	}
 
-	public void execute(short instr) {
+	/**
+	 * Runs a single instruction
+	 */
+	public void runNext() {
+		execute(instructions.getInstructionAt(PC.next()));
+	}
+
+	private void execute(short instr) {
 		byte instrType = (byte)(instr >> 12 << 4);
 		switch (instrType) {
 			case OPS  -> LogicArithmetic.handle(instr);
