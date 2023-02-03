@@ -46,11 +46,10 @@ public interface Instructions {
 		// here so we don't expose them, they're still constants
 		final int MASK_6BIT_SIGN = 0b100000;
 		final int MASK_6BIT  = 0b111111;
-		byte b = (byte)s;
-		if ((b & MASK_6BIT_SIGN) == 0) { // > 0
-			return (short)(b & MASK_6BIT);
+		if ((s & MASK_6BIT_SIGN) == 0) { // > 0
+			return (short)(s & MASK_6BIT);
 		} else {
-			return (short)(b | ~MASK_6BIT);
+			return (short)(s | ~MASK_6BIT);
 		}
 	}
 }
