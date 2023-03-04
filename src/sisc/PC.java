@@ -1,11 +1,9 @@
 package sisc;
 
 public class PC {
-	private short PC = 0;
+	private char PC = 0;
 	
-	public short next() {
-		if(PC < 0) PC = 0;
-		
+	public char next() {
 		return PC++;
 	}
 	
@@ -13,21 +11,18 @@ public class PC {
 		PC += amount;
 	}
 	
-	public void jumpTo(short dest) {
+	public void jumpTo(char dest) {
 		PC = --dest; // next() call will increment
 	}
 	
 	/**
 	 * @return The next instruction to execute, without incrementing the counter
 	 */
-	public short peek() {
-		if (PC < 0) {
-			return 0;
-		}
+	public char peek() {
 		return PC;
 	}
 	
 	public String peekStr() {
-		return Integer.toHexString(Short.toUnsignedInt(PC));
+		return Integer.toHexString(PC);
 	}
 }

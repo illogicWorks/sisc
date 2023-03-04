@@ -12,7 +12,7 @@ public record IMEM(short[] data) implements InstructionStorage {
 	}
 	
 	@Override
-	public short getInstructionAt(short offset) {
+	public short getInstructionAt(char offset) {
 		return data[offset];
 	}
 }

@@ -20,7 +20,7 @@ public class Branching {
 	public static void jalr(short s, PC pc) {
 		int regA = (s >> 11) & REG_MASK;
 		int regD = (s >> 8) & REG_MASK;
-		setReg(regD, pc.peek());
-		pc.jumpTo(getReg(regA));
+		setReg(regD, (short)pc.peek());
+		pc.jumpTo((char)getReg(regA));
 	}
 }

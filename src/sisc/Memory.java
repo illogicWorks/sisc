@@ -23,7 +23,7 @@ public final class Memory implements InstructionStorage {
 	}
 
 	@Override
-	public short getInstructionAt(short address) {
+	public short getInstructionAt(char address) {
 		throw new UnsupportedOperationException("Not implemented! (yet)");
 	}
 
