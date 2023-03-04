@@ -13,23 +13,21 @@ public class DeviceDiscoverer {
 		List<Object> devices = new ArrayList<>();
 		List<DeviceThread> threadsToStart = new ArrayList<>();
 		for (var candidate : ServiceLoader.load(InputDevice.class)) {
-			InputDeviceController controller = new InputDeviceController(io, candidate);
-			devices.add(controller);
-			DeviceThread thread = new DeviceThread(() -> candidate.start(controller));
-			threadsToStart.add(thread);
-			candidate.configure(thread);
-			thread.setName("InputDeviceThread[" + candidate.name() + "]");
+			devices.add(handle(candidate, new InputDeviceController(io, candidate), threadsToStart));
 		}
 		for (var candidate : ServiceLoader.load(OutputDevice.class)) {
-			OutputDeviceController controller = new OutputDeviceController(io, candidate);
-			devices.add(controller);
-			DeviceThread thread = new DeviceThread(() -> candidate.start(controller));
-			threadsToStart.add(thread);
-			candidate.configure(thread);
-			thread.setName("OutputDeviceThread[" + candidate.name() + "]");
+			devices.add(handle(candidate, new OutputDeviceController(io, candidate), threadsToStart));
 		}
 		Collections.shuffle(threadsToStart);
 		threadsToStart.forEach(Thread::start);
 		return List.copyOf(devices);
+	}
+
+	private static <T extends Device<R>, R> R handle(T candidate, R controller, List<DeviceThread> threadsToStart) {
+		DeviceThread thread = new DeviceThread(() -> candidate.start(controller));
+		threadsToStart.add(thread);
+		candidate.configure(thread);
+		thread.setName("DeviceThread[" + candidate.name() + "]");
+		return controller;
 	}
 }
