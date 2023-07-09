@@ -1,14 +1,15 @@
 package sisc;
 
-public record IMEM(short[] data) implements InstructionStorage {
+public record IMEM(byte[] data, int filledLength) implements InstructionStorage {
 	@Override
 	public String toString() {
-		String s = "";
-		for (short instr : data) {
-			String str = Integer.toHexString(Short.toUnsignedInt(instr));
-			s += "0".repeat(4 - str.length()) + str;
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < filledLength; i++) {
+			String str = Integer.toHexString(Short.toUnsignedInt((short)SHORT_AT.get(data, i * 2)));
+			builder.append("0".repeat(4 - str.length()));
+			builder.append(str);
 		}
-		return s;
+		return builder.toString();
 	}
 	
 	@Override

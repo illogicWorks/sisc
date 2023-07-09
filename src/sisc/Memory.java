@@ -1,12 +1,7 @@
 package sisc;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-
 public final class Memory implements InstructionStorage {
 	private final byte[] s;
-	private static final VarHandle SHORT_AT = MethodHandles.byteArrayViewVarHandle(short[].class, ByteOrder.LITTLE_ENDIAN);
 
 	/**
 	 * Places all bytes in the passed array into this memory, placing them starting at {@code startPos} and going for
@@ -19,12 +14,12 @@ public final class Memory implements InstructionStorage {
 	}
 
 	public Memory() {
-		this.s =  new byte[Short.MAX_VALUE * 2];
+		this.s =  new byte[Character.MAX_VALUE];
 	}
 
 	@Override
 	public short getInstructionAt(char address) {
-		throw new UnsupportedOperationException("Not implemented! (yet)");
+		return (short)SHORT_AT.get(s, address);
 	}
 
 	public short load(short addr) {

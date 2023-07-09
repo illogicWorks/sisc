@@ -12,17 +12,26 @@ public class Computer {
 	private final PC PC = new PC();
 	private final IOSystem ioSystem;
 	
-	public Computer() {
-		instructions = new IMEM(FileReader.loadImage("samples/test.siso"));
+	public Computer(boolean vonNeumann) {
 		ioSystem = new IOSystem();
 		DeviceDiscoverer.discoverDevices(ioSystem);
+		byte[] image = FileReader.loadImageBytes("samples/test.siso");
+		if (vonNeumann) {
+			memory.flash(image, 0);
+			instructions = memory;
+		} else {
+			byte[] paddedImage = new byte[Character.MAX_VALUE];
+			System.arraycopy(image, 0, paddedImage, 0, image.length);
+			instructions = new IMEM(paddedImage, image.length);
+		}
+		
 	}
 	
 	/**
 	 * Runs all the code in the {@link InstructionStorage}. Infinite loop
 	 */
 	public void run() {
-		System.out.println("IMEM contents: " + instructions);
+		System.out.println("Contents: " + instructions);
 		
 		while (true) {
             System.out.println("PC addr: " + PC.peekStr());

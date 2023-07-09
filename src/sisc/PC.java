@@ -4,15 +4,17 @@ public class PC {
 	private char PC = 0;
 	
 	public char next() {
-		return PC++;
+		char ret = PC;
+		PC += 2;
+		return ret;
 	}
 	
 	public void jumpOffset(byte amount) {
-		PC += amount;
+		PC += amount * 2;
 	}
 	
 	public void jumpTo(char dest) {
-		PC = --dest; // next() call will increment
+		PC = (char)(dest - 2); // next() call will increment
 	}
 	
 	/**
