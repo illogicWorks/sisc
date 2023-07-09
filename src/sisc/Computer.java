@@ -6,8 +6,6 @@ import sisc.io.IOSystem;
 
 import static sisc.instructions.Instructions.*;
 
-import java.util.Arrays;
-
 public class Computer {
 	private final Memory memory = new Memory();
 	private final InstructionStorage instructions;
