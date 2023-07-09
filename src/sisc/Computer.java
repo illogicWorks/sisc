@@ -12,10 +12,9 @@ public class Computer {
 	private final PC PC = new PC();
 	private final IOSystem ioSystem;
 	
-	public Computer(boolean vonNeumann) {
+	public Computer(boolean vonNeumann, byte[] image) {
 		ioSystem = new IOSystem();
 		DeviceDiscoverer.discoverDevices(ioSystem);
-		byte[] image = FileReader.loadImageBytes("samples/test.siso");
 		if (vonNeumann) {
 			memory.flash(image, 0);
 			instructions = memory;
