@@ -14,6 +14,6 @@ public record IMEM(byte[] data, int filledLength) implements InstructionStorage 
 	
 	@Override
 	public short getInstructionAt(char offset) {
-		return data[offset];
+		return (short)SHORT_AT.get(data, offset);
 	}
 }
